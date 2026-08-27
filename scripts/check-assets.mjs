@@ -9,6 +9,13 @@ const publicDir = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'public
 const entryFiles = ['index.html', 'site.webmanifest'];
 const canonicalHost = 'https://fontislabs.com.br';
 
+// Conteudo que nunca deve chegar em producao. Cada entrada e [regex, motivo].
+const FORBIDDEN_CONTENT = [
+  [/\[a definir\]/gi, 'placeholder de conteudo'],
+  [/\bTODO\b|\bFIXME\b/g, 'marcacao de trabalho pendente'],
+  [/lorem ipsum/gi, 'texto de preenchimento'],
+];
+
 const problems = [];
 
 /** Caminhos que nao sao arquivo local do site. */
@@ -65,6 +72,12 @@ for (const entry of entryFiles) {
   for (const insecure of source.match(/http:\/\/[^"'\s]+/g) ?? []) {
     if (!insecure.startsWith('http://www.w3.org') && !insecure.startsWith('http://www.sitemaps.org')) {
       problems.push(`${entry}: URL sem TLS -> ${insecure}`);
+    }
+  }
+
+  for (const [pattern, reason] of FORBIDDEN_CONTENT) {
+    for (const hit of source.match(pattern) ?? []) {
+      problems.push(`${entry}: ${reason} -> ${hit}`);
     }
   }
 
