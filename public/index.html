@@ -495,6 +495,23 @@
 
   .band { border-top: 1px solid var(--rule); padding: var(--band) 0; }
   .band:first-of-type { border-top: none; }
+
+  /* Alternancia de fundo: cria respiro e sinaliza hierarquia sem mexer no conteudo.
+     A borda superior sai porque a mudanca de cor ja e a separacao.
+     SO PODE ser aplicada em secao que nao contenha cartao com background --surface
+     (.pain, .partner, .honest) — o cartao desapareceria dentro dela. Hoje isso
+     restringe a alternancia a #como, #servicos e #contato. */
+  .band-alt { background: var(--surface); border-top-color: transparent; }
+
+  /* Climax da pagina. "Quando nao nos contratar" e o diferencial editorial e era a
+     secao mais escondida. Gasta o bloco de superficie que o orcamento de 10 % de
+     acento liberou — UM bloco: nenhuma outra secao recebe este tratamento.
+     A secao recebe acento e nao superficie justamente porque contem .honest. */
+  .band-climax .honest {
+    background: var(--accent-100);
+    border-color: var(--accent-200);
+    border-left: 3px solid var(--accent-500);
+  }
   .band-in { display: flex; flex-direction: column; gap: clamp(2rem, 4vw, 3rem); }
   .band-head { display: flex; flex-direction: column; gap: 0.875rem; max-width: 60ch; }
 
@@ -887,7 +904,7 @@
   </section>
 
   <!-- COMO -->
-  <section class="band" id="como">
+  <section class="band band-alt" id="como">
     <div class="wrap band-in">
       <div class="band-head reveal">
         <span class="lbl band-idx"><span class="n">02</span> Como trabalhamos</span>
@@ -1034,7 +1051,7 @@
   </section>
 
   <!-- QUANDO NÃO -->
-  <section class="band" id="risco">
+  <section class="band band-climax" id="risco">
     <div class="wrap band-in">
       <div class="honest reveal">
         <div class="band-head">
@@ -1065,7 +1082,7 @@
   </section>
 
   <!-- CTA -->
-  <section class="band" id="contato">
+  <section class="band band-alt" id="contato">
     <div class="wrap band-in">
       <div class="cta reveal">
         <div class="cta-copy">
