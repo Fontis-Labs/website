@@ -3,13 +3,13 @@
   "short_name": "Fontis",
   "description": "Consultoria, engenharia e dados para empresas que cresceram alem da planilha.",
   "lang": "pt-BR",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#F5F4F7",
   "theme_color": "#100D14",
   "icons": [
-    { "src": "/assets/icons/fontis-icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/assets/icons/fontis-icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/assets/fontis-icon.svg", "sizes": "any", "type": "image/svg+xml" }
+    { "src": "assets/icons/fontis-icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icons/fontis-icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/fontis-icon.svg", "sizes": "any", "type": "image/svg+xml" }
   ]
 }

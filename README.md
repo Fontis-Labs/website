@@ -1,6 +1,11 @@
 # website
 
-Site institucional da Fontis Labs — **https://fontislabs.com.br**.
+Site institucional da Fontis Labs.
+
+| | |
+|---|---|
+| **No ar agora** | https://fontis-labs.github.io/website/ |
+| **Endereço final** | https://fontislabs.com.br *(domínio ainda não registrado)* |
 
 HTML e CSS escritos à mão, sem framework, sem build e sem dependência de runtime. É
 uma decisão, não preguiça: uma página só, que tem que carregar rápido no 4G de quem
@@ -15,7 +20,6 @@ public/                      raiz publicada — o que está aqui é o que vai pa
 ├── site.webmanifest         nome, cor e ícones do app instalável
 ├── robots.txt               libera indexação e aponta o sitemap
 ├── sitemap.xml              uma URL só; atualize o lastmod ao mexer no conteúdo
-├── CNAME                    domínio customizado do GitHub Pages
 └── assets/
     ├── fontis-icon.svg      favicon vetorial
     ├── icons/               PNG para iOS e para o manifest
@@ -25,9 +29,8 @@ scripts/check-assets.mjs     valida referências locais, TLS e domínio canônic
 
 ## Rodar localmente
 
-Qualquer servidor estático serve. Precisa ser servidor de verdade, e não abrir o
-arquivo com `file://` — os caminhos são absolutos (`/assets/...`) e o manifest e as
-fontes não carregam de outro jeito.
+Qualquer servidor estático serve. Prefira um servidor de verdade a abrir com
+`file://` — o `site.webmanifest` não carrega em `file://`.
 
 ```sh
 python3 -m http.server 4000 --directory public
@@ -45,22 +48,34 @@ Ele quebra se o HTML apontar para um arquivo que não existe, se aparecer uma UR
 
 ## Como publicar
 
-A publicação é no **GitHub Pages**, a partir do diretório `public/`. Três passos, nesta
-ordem — o workflow está em `workflow_dispatch` de propósito, para não falhar em
-vermelho a cada commit enquanto o domínio não existe.
+Já está publicando sozinho: todo commit na `main` dispara `deploy.yml`, que roda o
+`check-assets` e sobe `public/` para o GitHub Pages.
 
-1. **Registrar `fontislabs.com.br`** e apontar o DNS para o Pages:
+Os caminhos do site são **relativos** de propósito. A mesma build funciona na URL de
+projeto do Pages (`/website/`) e na raiz de um domínio próprio, sem reescrever nada.
+
+### Ligar o domínio próprio
+
+Falta um passo só, e ele depende de registrar `fontislabs.com.br`:
+
+1. **Registrar o domínio** no registro.br.
+2. **Apontar o DNS** para o Pages:
    - `A` na raiz para `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
    - `AAAA` na raiz para `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`
    - `CNAME` de `www` para `fontis-labs.github.io`
-2. **Settings → Pages** neste repositório: em *Source*, escolher **GitHub Actions**.
-   Confirmar o domínio customizado e marcar *Enforce HTTPS* assim que o certificado sair.
-3. **Actions → deploy → Run workflow.** Deu certo? Descomente o gatilho `push` em
-   `.github/workflows/deploy.yml` e o site passa a publicar sozinho a cada commit na `main`.
+3. **Criar `public/CNAME`** com uma linha: `fontislabs.com.br`. No próximo deploy o
+   Pages adota o domínio; marque *Enforce HTTPS* em Settings → Pages quando o
+   certificado sair (leva alguns minutos).
+
+Enquanto isso, `canonical` e as tags `og:` já apontam para `fontislabs.com.br` — o
+endereço definitivo. Isso significa que a URL do Pages é **preview interno**: link
+compartilhado dela gera card de preview quebrado, porque a `og:image` mora no domínio
+que ainda não existe.
 
 ### Trocar de hospedagem depois
 
-Nada aqui é específico do GitHub Pages além de `public/CNAME` e do workflow. Para
+Nada aqui é específico do GitHub Pages além de `deploy.yml` (e do `public/CNAME`,
+quando ele existir). Para
 Cloudflare Pages, Netlify ou Vercel: diretório de publicação `public`, comando de build
 vazio. É uma configuração de 10 minutos, não uma migração.
 

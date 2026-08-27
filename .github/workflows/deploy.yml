@@ -1,14 +1,13 @@
 # Publica o conteudo de public/ no GitHub Pages.
 #
-# Comece manualmente (aba Actions > deploy > Run workflow). So descomente o gatilho de
-# push depois que os tres passos do README ("Como publicar") estiverem feitos — antes
-# disso o job falha em vermelho a cada commit sem publicar nada.
+# Todo commit na main publica. Os caminhos do site sao relativos, entao a mesma
+# build serve tanto na URL de projeto do Pages quanto na raiz do dominio proprio.
 name: deploy
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
-  # push:
-  #   branches: [main]
 
 permissions:
   contents: read
