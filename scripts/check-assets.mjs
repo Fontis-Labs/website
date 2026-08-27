@@ -1,7 +1,7 @@
 // Verifica que todo caminho local citado no site existe de fato no diretorio publicado.
 // Um <link> quebrado nao derruba a pagina: ele degrada em silencio (fonte errada,
 // favicon sumido) e ninguem percebe ate um cliente abrir o site.
-import { readFile, access } from 'node:fs/promises';
+import { readFile, access, stat } from 'node:fs/promises';
 import { join, dirname, resolve, relative, isAbsolute } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -108,6 +108,22 @@ for (const entry of entryFiles) {
     }
     if (/<meta name="twitter:card" content="summary">/.test(source)) {
       problems.push(`${entry}: twitter:card=summary da miniatura pequena; use summary_large_image`);
+    }
+
+    // og:image e URL absoluta, entao a checagem de caminho local nao a alcanca. Sem
+    // esta assercao, apagar o PNG passaria no CI e quebraria o card em silencio.
+    const ogImage = source.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
+    if (ogImage?.startsWith(SITE_ORIGIN)) {
+      const localPath = ogImage.slice(SITE_ORIGIN.length).replace(/^\//, '');
+      try {
+        const { size } = await stat(join(publicDir, localPath));
+        // Acima de ~300 KB o WhatsApp costuma desistir do card grande.
+        if (size > 300 * 1024) {
+          problems.push(`${entry}: og:image tem ${Math.round(size / 1024)} KB; mantenha abaixo de 300 KB`);
+        }
+      } catch {
+        problems.push(`${entry}: og:image aponta para arquivo inexistente -> ${localPath}`);
+      }
     }
   }
 }

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Fontis — imagem de compartilhamento</title>
+<style>
+  /* Fonte local com caminho relativo: o Chrome headless carrega por file://.
+     Se a JetBrains Mono nao carregar, a captura cai no monospace do sistema e a
+     marca sai errada — por isso font-display: block, e nao swap. */
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("../fonts/jetbrains-mono-vf-latin.woff2") format("woff2");
+    font-weight: 100 800;
+    font-display: block;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; }
+  body {
+    background: #100D14;
+    color: #F5F4F7;
+    font-family: "JetBrains Mono", monospace;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 72px 88px;
+  }
+  .top { display: flex; align-items: center; gap: 22px; }
+  /* Peso grande do guia: dois arcos na proporcao verdadeira, traco 3. A apresentacao
+     canonica desta imagem e larga (LinkedIn, Slack, Twitter), entao vale o peso grande
+     — o mesmo que o hero usa a partir de 104 px. */
+  .top svg { width: 104px; height: 104px; flex: none; }
+  .sym { fill: none; stroke: #F5F4F7; stroke-width: 3; }
+  .sym-dot { fill: #A585D8; }
+  .wordmark { font-size: 52px; font-weight: 500; letter-spacing: 0.02em; }
+  h1 { font-size: 76px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.08; }
+  h1 em { font-style: normal; color: #A585D8; }
+  .foot { display: flex; justify-content: space-between; align-items: baseline; }
+  .lbl {
+    font-size: 21px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.14em; color: #A79FB3;
+  }
+</style>
+</head>
+<body>
+  <div class="top">
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <path class="sym" d="M25.11 43.02 A13 13 0 1 1 38.89 43.02"/>
+      <path class="sym" d="M17.28 48.35 A22 22 0 1 1 46.72 48.35"/>
+      <circle class="sym-dot" cx="32" cy="32" r="4.5"/>
+    </svg>
+    <span class="wordmark">fontis</span>
+  </div>
+
+  <h1>Da fonte<br><em>à decisão.</em></h1>
+
+  <div class="foot">
+    <span class="lbl">Consultoria · Engenharia · Dados</span>
+    <span class="lbl">fontislabs.com.br</span>
+  </div>
+</body>
+</html>
