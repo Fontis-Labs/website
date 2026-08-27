@@ -22,6 +22,23 @@ Consequência para o plano: a Tarefa 2 (WhatsApp) é a única que restabelece um
 
 ---
 
+## Correções feitas na execução (27/08/2026)
+
+Três premissas deste plano não sobreviveram à medição. Ficam registradas aqui em vez de o plano ser reescrito como se sempre estivesse certo — ver `#5`.
+
+**Tarefa 6 — o diagnóstico estava errado.** O plano manda tirar a faixa de números do hero alegando que ela empurra o CTA para baixo da dobra. Medido em viewport real de 375×667, a faixa começa em **y=833**: nunca esteve na dobra, e mover uma seção para um irmão não muda a ordem do conteúdo. O que consome a dobra é o **símbolo**, que abre a tela no mobile e ocupa 233 px dos 667. O ajuste foi no ritmo vertical do hero em ≤ 560 px, e a faixa ficou onde estava. Resultado: CTA de y=679 para **y=628**, com 39 px de folga.
+
+**Tarefa 8 — desnecessária, foi pulada.** Os dois itens já estavam resolvidos. A frase *"Um de nós veio da mesa onde a decisão é tomada…"* **já é** um `.pquote` com régua de acento (linha 1033) — a issue dizia que estava enterrada em corpo de texto, e isso veio de eu ter lido um dump de texto puro, onde o estilo não aparece. E a medida de leitura já está no limite: em 1440 px, `.hero-sub` 52ch, `.who-copy p` 51ch, `.prose` 60ch, `.step-out p` 56ch, `.partner p` 54ch, `.pquote` 48ch, `.pain-a` 34ch, `.honest-d` 36ch, `.svc-lead` 34ch. Nada passa de 75.
+
+**Tarefa 7 — a lista de seções alternadas mudou.** `.band-alt` só pode ir em seção sem cartão de fundo `--surface`. Levantado antes de escolher: a seção 01 (`.pain`), `#quem` (`.partner`) e `#risco` (`.honest`) têm esse problema. A alternância ficou em `#como` e `#contato`, e a restrição está escrita no CSS.
+
+**Duas armadilhas de ferramenta**, que deram falso resultado antes de serem descobertas:
+
+- Chrome headless **trava a largura mínima em 500 CSS px**. `--window-size=375` renderiza a 500 e a captura sai cortada, o que parece rolagem horizontal e não é (`scrollWidth == clientWidth == 500`). Viewport de 375 real só via iframe dentro de uma janela de 500.
+- As animações de entrada tornam cada captura diferente, então comparar antes e depois exige `--force-prefers-reduced-motion`. É a razão de existir o `scripts/shoot.sh`.
+
+---
+
 ## Restrições globais
 
 Valem para toda tarefa, sem repetição no corpo de cada uma.
