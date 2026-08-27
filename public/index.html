@@ -338,6 +338,25 @@
   .btn-ghost:hover { border-color: var(--fg); opacity: 1; }
   .btn-lg { font-size: 0.875rem; padding: 0.8rem 1.4rem; }
 
+  /* CTA secundario rebaixado: link com regua, nao botao. Continua obvio e para de
+     competir com a acao que importa — uma acao primaria por tela. */
+  .link-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--f-mono);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--fg);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule-strong);
+    padding-bottom: 0.2rem;
+    transition: border-color 200ms var(--ease);
+  }
+  .link-arrow:hover { border-color: var(--fg); }
+  .link-arrow .arrow { transition: transform 200ms var(--ease); }
+  .link-arrow:hover .arrow { transform: translateX(0.2rem); }
+
   /* Regra dos 5 % de acento: so um botao cheio por tela. Enquanto o hero esta
      visivel o CTA da nav fica em contorno; quando o hero sai, ele assume o cheio. */
   .nav .btn-cta {
@@ -405,6 +424,9 @@
     align-items: start;
   }
   .hero-copy { display: flex; flex-direction: column; gap: 1.75rem; align-items: flex-start; }
+  /* O rotulo do hero e a unica linha que responde "o que e isso" antes da manchete.
+     Nos outros usos de .lbl o tamanho padrao serve; aqui ele carrega peso. */
+  .hero-copy > .lbl { font-size: 0.8125rem; color: var(--accent-500); }
   .hero-sub { font-size: clamp(1rem, 2.2vw, 1.1875rem); line-height: 1.55; max-width: 52ch; color: var(--fg); }
 
   /* Botao e o que vem depois dele andam juntos, com respiro menor que o do resto
@@ -437,6 +459,16 @@
   @media (max-width: 720px) {
     .hero-grid { grid-template-columns: 1fr; }
     .hero-mark { order: -1; }
+  }
+
+  /* No mobile o simbolo abre a tela e consome 39 % da dobra (257 px de 667). Apertar
+     o ritmo vertical do hero e o que traz o CTA de volta para cima da linha: medido em
+     375x667, sem isto o botao termina 12 px abaixo da dobra. Nao mexe no simbolo, que
+     tem tamanho normativo por peso no guia de marca. */
+  @media (max-width: 560px) {
+    .hero { padding-top: 1.5rem; }
+    .hero-grid { gap: 1.25rem; }
+    .hero-copy { gap: 1.375rem; }
   }
 
   /* datasheet strip */
@@ -710,7 +742,7 @@
     .js .reveal-rules .step:last-child { border-bottom-color: var(--rule); }
     .js .reveal-rules .step::before,
     .js .reveal-rules .step::after { display: none; }
-    .btn, .svc, .theme, .nav-links a.lbl { transition: none; }
+    .btn, .svc, .theme, .nav-links a.lbl, .link-arrow, .link-arrow .arrow { transition: none; }
   }
 
   /* ---------- impressao ----------
@@ -784,7 +816,7 @@
           <div class="hero-act rise rise-4">
             <div class="hero-cta" id="hero-cta">
               <a class="btn btn-lg" href="mailto:contato@fontislabs.com.br?subject=Diagn%C3%B3stico%20t%C3%A9cnico">Agendar diagnóstico</a>
-              <a class="btn btn-lg btn-ghost" href="#como">Como trabalhamos</a>
+              <a class="link-arrow" href="#como">Como trabalhamos <span class="arrow" aria-hidden="true">→</span></a>
             </div>
             <p class="hero-spec">
               <span>30 minutos</span>

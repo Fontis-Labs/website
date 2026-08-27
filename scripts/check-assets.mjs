@@ -110,6 +110,17 @@ for (const entry of entryFiles) {
       problems.push(`${entry}: twitter:card=summary da miniatura pequena; use summary_large_image`);
     }
 
+    // Uma acao primaria por tela. O hero tinha dois botoes de peso igual competindo.
+    const hero = source.match(/<section class="hero">[\s\S]*?\n  <\/section>/)?.[0] ?? '';
+    if (!hero) {
+      problems.push(`${entry}: nao achei a secao .hero — o seletor da assercao ficou obsoleto`);
+    } else {
+      const bigButtons = (hero.match(/class="btn btn-lg/g) ?? []).length;
+      if (bigButtons > 1) {
+        problems.push(`${entry}: hero tem ${bigButtons} botoes btn-lg; a regra e uma acao primaria por tela`);
+      }
+    }
+
     // og:image e URL absoluta, entao a checagem de caminho local nao a alcanca. Sem
     // esta assercao, apagar o PNG passaria no CI e quebraria o card em silencio.
     const ogImage = source.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
