@@ -95,9 +95,30 @@
     --muted: #605A6B;
     --rule: #D7D4DD;
     --rule-strong: #B8B3C2;
-    --accent: #5A3A82;
+    --accent: var(--accent-500);
     --accent-fg: #F5F4F7;
-    --accent-soft: #E2DBEC;
+
+    /* Rampa da ametista: matiz e saturacao do #5A3A82 (H 266,7 / S 38,3 %), so a
+       luminosidade varia — por isso o 500 cai exatamente no valor do guia.
+       100-300 sao superficie e borda, NUNCA texto. 400-700 servem para texto.
+       O 500 e o acento do guia e nao muda: e valor de marca, nao de sistema.
+       Orcamento de area do acento: 10 %, gasto nesta ordem — a acao que importa,
+       depois UM bloco de superficie, e so o que sobrar em detalhe. Nunca fundo
+       cheio, nunca gradiente, nunca dois roxos na mesma peca. */
+    --accent-100: #EFEAF6;
+    --accent-200: #DACEE9;
+    --accent-300: #BAA3D6;
+    --accent-400: #8F6BBD;
+    --accent-500: #5A3A82;
+    --accent-600: #472E66;
+    --accent-700: #33214A;
+
+    /* Cores funcionais: significado, nao decoracao. Todas conferidas em AA (>= 4,5:1)
+       para texto normal sobre o fundo do seu tema. */
+    --success: #1B6B45;
+    --warning: #8A5A00;
+    --danger: #A32118;
+    --info: #2C5AA8;
 
     --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
     --f-sans: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -123,9 +144,23 @@
       --muted: #918B9C;
       --rule: #26212F;
       --rule-strong: #3D3648;
-      --accent: #A585D8;
+      --accent: var(--accent-500);
       --accent-fg: #0C0A10;
-      --accent-soft: #241B33;
+
+      /* A rampa inverte no escuro: 100 continua sendo a superficie mais discreta e
+         700 a enfase maxima, mas os valores caminham na direcao oposta. */
+      --accent-100: #241B33;
+      --accent-200: #33214A;
+      --accent-300: #472E66;
+      --accent-400: #8F6BBD;
+      --accent-500: #A585D8;
+      --accent-600: #BAA3D6;
+      --accent-700: #DACEE9;
+
+      --success: #57C08A;
+      --warning: #E0A83C;
+      --danger: #F08279;
+      --info: #85AEEA;
     }
   }
 
@@ -136,9 +171,23 @@
     --muted: #918B9C;
     --rule: #26212F;
     --rule-strong: #3D3648;
-    --accent: #A585D8;
+    --accent: var(--accent-500);
     --accent-fg: #0C0A10;
-    --accent-soft: #241B33;
+
+    /* A rampa inverte no escuro: 100 continua sendo a superficie mais discreta e
+       700 a enfase maxima, mas os valores caminham na direcao oposta. */
+    --accent-100: #241B33;
+    --accent-200: #33214A;
+    --accent-300: #472E66;
+    --accent-400: #8F6BBD;
+    --accent-500: #A585D8;
+    --accent-600: #BAA3D6;
+    --accent-700: #DACEE9;
+
+    --success: #57C08A;
+    --warning: #E0A83C;
+    --danger: #F08279;
+    --info: #85AEEA;
   }
 
   * { box-sizing: border-box; }

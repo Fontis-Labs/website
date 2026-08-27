@@ -128,6 +128,33 @@ for (const entry of entryFiles) {
   }
 }
 
+// Token usado e nao definido rende cor invisivel, nao erro. E token definido em um
+// tema e esquecido no outro rende texto ilegivel so para quem usa o tema escuro.
+{
+  const source = await readFile(join(publicDir, 'index.html'), 'utf8');
+  const used = new Set([...source.matchAll(/var\((--[a-z0-9-]+)/g)].map((m) => m[1]));
+  const themeBlocks = [
+    ['claro', /:root \{([\s\S]*?)\n  \}/],
+    ['escuro (prefers)', /:root:not\(\[data-theme="light"\]\) \{([\s\S]*?)\n    \}/],
+    ['escuro (toggle)', /:root\[data-theme="dark"\] \{([\s\S]*?)\n  \}/],
+  ].map(([name, re]) => [
+    name,
+    new Set([...(source.match(re)?.[1] ?? '').matchAll(/(--[a-z0-9-]+):/g)].map((m) => m[1])),
+  ]);
+
+  const COLOR_TOKEN = /^--(accent|bg|surface|fg|muted|rule|success|warning|danger|info)/;
+
+  for (const token of used) {
+    if (!themeBlocks.some(([, defined]) => defined.has(token))) {
+      problems.push(`index.html: var(${token}) usado e nunca definido`);
+    }
+    if (!COLOR_TOKEN.test(token)) continue;
+    for (const [name, defined] of themeBlocks) {
+      if (!defined.has(token)) problems.push(`index.html: ${token} nao existe no tema ${name}`);
+    }
+  }
+}
+
 if (problems.length > 0) {
   console.error(`check-assets: ${problems.length} problema(s)\n` + problems.map((p) => `  - ${p}`).join('\n'));
   process.exit(1);
