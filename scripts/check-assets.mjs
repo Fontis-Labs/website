@@ -7,7 +7,17 @@ import { fileURLToPath } from 'node:url';
 
 const publicDir = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'public');
 const entryFiles = ['index.html', 'site.webmanifest'];
-const canonicalHost = 'https://fontislabs.com.br';
+// Origem canonica do site. Unico lugar que sabe o endereco — trocar aqui e nos <meta>
+// do HTML quando o dominio proprio entrar. Ver docs/plans/, Tarefa 10.
+const SITE_ORIGIN = 'https://fontis-labs.github.io/website';
+
+// Meta que o WhatsApp, o LinkedIn e o Slack leem para montar o card do link.
+// O site.webmanifest nao participa disso: ele serve para instalar o site como app.
+const REQUIRED_META = [
+  'og:type', 'og:locale', 'og:site_name', 'og:title', 'og:description',
+  'og:url', 'og:image', 'og:image:width', 'og:image:height',
+  'og:image:type', 'og:image:alt', 'twitter:card',
+];
 
 // Conteudo que nunca deve chegar em producao. Cada entrada e [regex, motivo].
 const FORBIDDEN_CONTENT = [
@@ -81,9 +91,24 @@ for (const entry of entryFiles) {
     }
   }
 
-  // O dominio canonico tem que ser um so, senao o buscador divide o ranking.
-  for (const url of source.match(/https:\/\/[^"'\s]*fontislabs[^"'\s]*/g) ?? []) {
-    if (!url.startsWith(canonicalHost)) problems.push(`${entry}: dominio fora do canonico -> ${url}`);
+  // Origem divergente divide o ranking do buscador e quebra o card do link.
+  for (const url of source.match(/https:\/\/[a-z0-9.-]+[^"'\s]*/gi) ?? []) {
+    const isOwnSite = url.includes('fontislabs') || url.includes('fontis-labs.github.io');
+    if (isOwnSite && !url.startsWith(SITE_ORIGIN)) {
+      problems.push(`${entry}: origem fora da canonica -> ${url}`);
+    }
+  }
+
+  if (entry === 'index.html') {
+    for (const name of REQUIRED_META) {
+      const attr = name.startsWith('og:') ? 'property' : 'name';
+      if (!new RegExp(`<meta ${attr}="${name}"`).test(source)) {
+        problems.push(`${entry}: falta <meta ${attr}="${name}">`);
+      }
+    }
+    if (/<meta name="twitter:card" content="summary">/.test(source)) {
+      problems.push(`${entry}: twitter:card=summary da miniatura pequena; use summary_large_image`);
+    }
   }
 }
 
