@@ -512,6 +512,15 @@
     border-color: var(--accent-200);
     border-left: 3px solid var(--accent-500);
   }
+
+  /* Secao ativa na nav. A regua e o sinal primario e a cor reforca — cor sozinha nao
+     serve para quem nao a distingue. A informacao mesma vai em aria-current. */
+  .nav-links a.lbl.is-active,
+  .nav-sm a.lbl.is-active {
+    color: var(--fg);
+    border-bottom: 1px solid var(--accent-500);
+    padding-bottom: 0.15rem;
+  }
   .band-in { display: flex; flex-direction: column; gap: clamp(2rem, 4vw, 3rem); }
   .band-head { display: flex; flex-direction: column; gap: 0.875rem; max-width: 60ch; }
 
@@ -1192,6 +1201,42 @@
         });
       }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
       for (var j = 0; j < alvos.length; j++) io.observe(alvos[j]);
+    }
+
+    /* ---- secao ativa na nav ----
+       IntersectionObserver e nao listener de scroll: o listener dispara dezenas de
+       vezes por segundo e cada disparo le layout, o que forca reflow. */
+    var linksNav = document.querySelectorAll('.nav-links a.lbl[href^="#"], .nav-sm a.lbl[href^="#"]');
+    if (temIO && linksNav.length) {
+      var porId = {};
+      for (var k = 0; k < linksNav.length; k++) {
+        var alvoId = linksNav[k].getAttribute('href').slice(1);
+        (porId[alvoId] = porId[alvoId] || []).push(linksNav[k]);
+      }
+
+      var marcar = function (idAtivo) {
+        for (var chave in porId) {
+          var ativo = chave === idAtivo;
+          for (var n = 0; n < porId[chave].length; n++) {
+            porId[chave][n].classList.toggle('is-active', ativo);
+            if (ativo) porId[chave][n].setAttribute('aria-current', 'true');
+            else porId[chave][n].removeAttribute('aria-current');
+          }
+        }
+      };
+
+      /* A secao ativa e a que ocupa a faixa central da tela. Sem essa faixa estreita,
+         duas secoes visiveis ao mesmo tempo ficam alternando a marcacao. */
+      var ioSecao = new IntersectionObserver(function (entradas) {
+        for (var e = 0; e < entradas.length; e++) {
+          if (entradas[e].isIntersecting) { marcar(entradas[e].target.id); return; }
+        }
+      }, { rootMargin: '-45% 0px -45% 0px' });
+
+      for (var chaveSecao in porId) {
+        var secao = document.getElementById(chaveSecao);
+        if (secao) ioSecao.observe(secao);
+      }
     }
 
     /* ---- CTA da nav: so vira botao cheio quando o do hero sai de cena,

@@ -121,6 +121,12 @@ for (const entry of entryFiles) {
       }
     }
 
+    // Marcar a secao ativa so com cor exclui quem nao distingue cor e quem usa leitor
+    // de tela. aria-current e o que carrega a informacao de verdade.
+    if (source.includes('is-active') && !source.includes('aria-current')) {
+      problems.push(`${entry}: secao ativa marcada sem aria-current`);
+    }
+
     // og:image e URL absoluta, entao a checagem de caminho local nao a alcanca. Sem
     // esta assercao, apagar o PNG passaria no CI e quebraria o card em silencio.
     const ogImage = source.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
