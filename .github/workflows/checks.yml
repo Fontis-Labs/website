@@ -1,0 +1,23 @@
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  assets:
+    name: assets e links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - run: node scripts/check-assets.mjs
+
+  secret-scan:
+    uses: Fontis-Labs/.github/.github/workflows/reusable-secret-scan.yml@main

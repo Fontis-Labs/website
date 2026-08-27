@@ -1,0 +1,1105 @@
+<!doctype html>
+<html lang="pt-BR" data-theme-pending>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Fontis — Consultoria, engenharia e dados</title>
+<meta name="description" content="Dois sócios que desenham a arquitetura, constroem o sistema e entregam a operação rodando. Diagnóstico com escopo e preço fechados em 1 a 2 semanas.">
+<meta name="author" content="Fontis Labs">
+<link rel="canonical" href="https://fontislabs.com.br/">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Fontis Labs">
+<meta property="og:title" content="Fontis — Da fonte à decisão">
+<meta property="og:description" content="Dois sócios que desenham a arquitetura, constroem o sistema e entregam a operação rodando. Diagnóstico com escopo e preço fechados.">
+<meta property="og:url" content="https://fontislabs.com.br/">
+<meta property="og:image" content="https://fontislabs.com.br/assets/icons/fontis-icon-512.png">
+<meta name="twitter:card" content="summary">
+
+<!-- Favicon conforme o guia de marca, secao 8: SVG para navegador moderno, .ico legado com 16/32/48 embutidos, PNG sem transparencia para iOS. -->
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/fontis-icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/icons/fontis-icon-180.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<meta name="theme-color" content="#F5F4F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0C0A10" media="(prefers-color-scheme: dark)">
+
+<!-- Fontes proprias, servidas pelo mesmo dominio: a JetBrains Mono e a face da marca, entao ela nao pode depender de estar instalada na maquina do cliente nem de um terceiro. -->
+<link rel="preload" href="/assets/fonts/jetbrains-mono-vf-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-vf-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<!-- Aplica o tema salvo antes da primeira pintura. Se rodar depois do <body>, quem escolheu o tema escuro ve um flash claro a cada carregamento. -->
+<script>
+  (function () {
+    var r = document.documentElement;
+    try {
+      var s = localStorage.getItem('fontis-theme');
+      if (s === 'light' || s === 'dark') r.setAttribute('data-theme', s);
+    } catch (e) {}
+    r.removeAttribute('data-theme-pending');
+  })();
+</script>
+
+<style>
+  /* ---------- fontes ----------
+     Os arquivos sao variaveis e declarados no intervalo 400–600. Isso trava no
+     proprio CSS a regra do guia: nada de Thin, ExtraLight ou ExtraBold. */
+
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400 600;
+    font-display: swap;
+    src: url('/assets/fonts/jetbrains-mono-vf-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400 600;
+    font-display: swap;
+    src: url('/assets/fonts/jetbrains-mono-vf-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400 600;
+    font-display: swap;
+    src: url('/assets/fonts/ibm-plex-sans-vf-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400 600;
+    font-display: swap;
+    src: url('/assets/fonts/ibm-plex-sans-vf-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+
+  /* ---------- tokens ---------- */
+
+  :root {
+    --bg: #F5F4F7;
+    --surface: #ECEAF0;
+    --fg: #100D14;
+    --muted: #605A6B;
+    --rule: #D7D4DD;
+    --rule-strong: #B8B3C2;
+    --accent: #5A3A82;
+    --accent-fg: #F5F4F7;
+    --accent-soft: #E2DBEC;
+
+    --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    --f-sans: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    /* Tracking normativo do guia, secao 5. Titulo nunca passa de -0,015 em;
+       rotulo em caixa alta e sempre +0,14 em. */
+    --ease: cubic-bezier(0.16, 0.84, 0.28, 1);
+
+    --tr-title: -0.015em;
+    --tr-label: 0.14em;
+    --tr-logo: 0.02em;
+
+    --wrap: 1120px;
+    --pad: clamp(1.25rem, 5vw, 4rem);
+    --band: clamp(3.5rem, 8vw, 6.5rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0C0A10;
+      --surface: #171420;
+      --fg: #E8E6EC;
+      --muted: #918B9C;
+      --rule: #26212F;
+      --rule-strong: #3D3648;
+      --accent: #A585D8;
+      --accent-fg: #0C0A10;
+      --accent-soft: #241B33;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0C0A10;
+    --surface: #171420;
+    --fg: #E8E6EC;
+    --muted: #918B9C;
+    --rule: #26212F;
+    --rule-strong: #3D3648;
+    --accent: #A585D8;
+    --accent-fg: #0C0A10;
+    --accent-soft: #241B33;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--f-sans);
+    font-size: 1rem;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    font-synthesis-weight: none;
+  }
+
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--pad); }
+  .prose { max-width: 60ch; }
+
+  /* ---------- roles ---------- */
+
+  .lbl {
+    font-family: var(--f-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+
+  h1, h2, h3 { font-family: var(--f-mono); font-weight: 500; margin: 0; text-wrap: balance; }
+  h1 { font-size: clamp(2.5rem, 8vw, 4.25rem); line-height: 1.04; letter-spacing: var(--tr-title); }
+  h2 { font-size: clamp(1.375rem, 3.4vw, 1.875rem); line-height: 1.2; letter-spacing: var(--tr-title); }
+  h3 { font-size: 1rem; line-height: 1.45; letter-spacing: -0.004em; }
+  p { margin: 0; text-wrap: pretty; }
+  strong { font-weight: 600; }
+
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 1px; }
+
+  .skip {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    font-family: var(--f-mono);
+    font-size: 0.8125rem;
+    background: var(--accent);
+    color: var(--accent-fg);
+    padding: 0.7rem 1.1rem;
+  }
+  .skip:focus { left: 0; }
+
+  /* Nota curta abaixo de um titulo de secao. */
+  .note { color: var(--muted); font-size: 0.9375rem; }
+
+  /* ---------- nav ---------- */
+
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-in {
+    max-width: var(--wrap);
+    margin: 0 auto;
+    padding: 0.875rem var(--pad);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  /* O gap do lockup e 0,75 x o corpo do logotipo (guia, secao 4). */
+  .brand { display: flex; align-items: center; gap: 0.84rem; }
+  .brand svg { width: 1.65rem; height: 1.65rem; display: block; flex: none; }
+  .brand-name { font-family: var(--f-mono); font-weight: 500; font-size: 1.125rem; letter-spacing: var(--tr-logo); }
+
+  .nav-links { display: flex; align-items: center; gap: 1.75rem; }
+  .nav-links a.lbl { color: var(--muted); transition: color 140ms ease; }
+  .nav-links a.lbl:hover { color: var(--fg); }
+
+  /* Abaixo de 780px os links viram uma faixa rolavel logo abaixo da marca.
+     Escondia-los sem substituto deixava as secoes inalcancaveis no celular. */
+  .nav-sm { display: none; }
+  .only-sm { display: none; }
+  @media (max-width: 780px) {
+    .nav-links .hide-sm { display: none; }
+    .nav-links .only-sm { display: inline; }
+    /* A nav ganha uma segunda linha no celular; o alvo da ancora precisa
+       desviar dela, senao o titulo da secao para embaixo da barra. */
+    html { scroll-padding-top: 7.5rem; }
+    .nav-sm {
+      display: flex;
+      gap: 1.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      /* Esmaece a borda direita para avisar que a faixa rola. */
+      -webkit-mask-image: linear-gradient(to right, #000 84%, transparent);
+      mask-image: linear-gradient(to right, #000 84%, transparent);
+      border-top: 1px solid var(--rule);
+      padding: 0.6rem var(--pad);
+      max-width: var(--wrap);
+      margin: 0 auto;
+    }
+    .nav-sm::-webkit-scrollbar { display: none; }
+    .nav-sm a { color: var(--muted); white-space: nowrap; }
+  }
+
+  /* Telas estreitas: aperta os respiros da nav para a linha caber inteira
+     sem sacrificar a marca nem o botao. */
+  @media (max-width: 420px) {
+    .nav-in { gap: 0.75rem; }
+    .nav-links { gap: 0.85rem; }
+    .nav .btn-cta { padding: 0.55rem 0.85rem; }
+  }
+
+  /* ---------- buttons ---------- */
+
+  .btn {
+    font-family: var(--f-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: var(--accent-fg);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    transition: opacity 140ms ease, background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+  }
+  .btn:hover { opacity: 0.86; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--fg);
+    border-color: var(--rule-strong);
+  }
+  .btn-ghost:hover { border-color: var(--fg); opacity: 1; }
+  .btn-lg { font-size: 0.875rem; padding: 0.8rem 1.4rem; }
+
+  /* Regra dos 5 % de acento: so um botao cheio por tela. Enquanto o hero esta
+     visivel o CTA da nav fica em contorno; quando o hero sai, ele assume o cheio. */
+  .nav .btn-cta {
+    background: transparent;
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .nav.is-stuck .btn-cta {
+    background: var(--accent);
+    color: var(--accent-fg);
+  }
+
+  /* ---------- toggle de tema ---------- */
+
+  .theme {
+    appearance: none;
+    background: none;
+    border: 1px solid var(--rule-strong);
+    color: var(--muted);
+    padding: 0;
+    width: 2.125rem;
+    height: 2.125rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex: none;
+    transition: border-color 160ms ease, color 160ms ease;
+  }
+  .theme:hover { border-color: var(--fg); color: var(--fg); }
+  .theme svg { width: 1rem; height: 1rem; display: block; }
+  .theme .t-ring { fill: none; stroke: currentColor; stroke-width: 1.6; }
+  .theme .t-half { fill: currentColor; }
+
+  /* ---------- hero ---------- */
+
+  /* `clip` recorta o eco dos arcos que sangra pela direita. Fica na .hero e nao
+     no <body>: overflow no body vazaria para a viewport e criaria rolagem
+     horizontal — 300 px de deserto que o cliente arrasta sem querer no trackpad. */
+  .hero { padding: clamp(3rem, 9vw, 6rem) 0 0; position: relative; overflow: clip; }
+
+  /* Halo: a ondulacao continua depois do simbolo, nos mesmos aneis concentricos.
+     Vive dentro do SVG do simbolo, entao fica centrado no ponto da nascente em
+     qualquer largura — nao ha coordenada absoluta para dessincronizar. Fio de
+     regua, nunca acento: roxo com area vira brega (guia, secao 4). */
+  .hero-mark, .hero-mark svg { overflow: visible; }
+  .hero-mark .halo circle {
+    fill: none;
+    stroke: var(--rule);
+    stroke-width: 0.42;
+    vector-effect: non-scaling-stroke;
+  }
+  /* A onda perde forca conforme se afasta da nascente. Sem essa rampa os quatro
+     aneis tem o mesmo peso e o desenho vira alvo de tiro, nao ondulacao. */
+  .hero-mark .halo circle:nth-child(1) { opacity: 0.9; }
+  .hero-mark .halo circle:nth-child(2) { opacity: 0.66; }
+  .hero-mark .halo circle:nth-child(3) { opacity: 0.44; }
+  .hero-mark .halo circle:nth-child(4) { opacity: 0.26; }
+  @media (max-width: 900px) { .hero-mark .halo { display: none; } }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: start;
+  }
+  .hero-copy { display: flex; flex-direction: column; gap: 1.75rem; align-items: flex-start; }
+  .hero-sub { font-size: clamp(1rem, 2.2vw, 1.1875rem); line-height: 1.55; max-width: 52ch; color: var(--fg); }
+
+  /* Botao e o que vem depois dele andam juntos, com respiro menor que o do resto
+     da coluna: sao um bloco de acao so. */
+  .hero-act { display: flex; flex-direction: column; gap: 1.05rem; align-items: flex-start; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+  /* Ficha tecnica do proximo passo: numero no lugar de adjetivo (voz, regra 1).
+     Responde "o que acontece se eu clicar" antes de o cliente ter de rolar. */
+  .hero-spec {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.75rem;
+    font-family: var(--f-mono);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  /* Cada item carrega o proprio separador no fim. Se a linha quebrar, o ponto
+     fecha a linha de cima em vez de abrir a de baixo com um sinal solto. */
+  .hero-spec span { white-space: nowrap; }
+  .hero-spec span:not(:last-child)::after {
+    content: " ·";
+    color: var(--rule-strong);
+  }
+
+  .hero-mark { width: clamp(104px, 17vw, 192px); flex: none; }
+  .hero-mark svg { width: 100%; height: auto; display: block; }
+  @media (max-width: 720px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-mark { order: -1; }
+  }
+
+  /* datasheet strip */
+  .facts {
+    margin-top: clamp(2.75rem, 6vw, 5rem);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+  .fact {
+    padding: 1.125rem 1.25rem 1.125rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .fact + .fact { border-left: 1px solid var(--rule); padding-left: 1.25rem; }
+  .fact-n { font-family: var(--f-mono); font-size: 1.375rem; font-weight: 500; letter-spacing: var(--tr-title); font-variant-numeric: tabular-nums; }
+  @media (max-width: 560px) {
+    .fact + .fact { border-left: none; border-top: 1px solid var(--rule); padding-left: 0; }
+  }
+
+  /* ---------- bands ---------- */
+
+  .band { border-top: 1px solid var(--rule); padding: var(--band) 0; }
+  .band:first-of-type { border-top: none; }
+  .band-in { display: flex; flex-direction: column; gap: clamp(2rem, 4vw, 3rem); }
+  .band-head { display: flex; flex-direction: column; gap: 0.875rem; max-width: 60ch; }
+
+  /* Indice de secao — o mesmo tom de folha de dados da faixa de numeros. */
+  .band-idx { display: flex; align-items: baseline; gap: 0.7rem; }
+  .band-idx .n { color: var(--accent); }
+
+  /* ---------- pains ---------- */
+
+  .pains { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .pain {
+    background: var(--surface);
+    padding: 1.5rem 1.375rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .pain-q { font-family: var(--f-mono); font-size: 0.9375rem; font-weight: 500; line-height: 1.45; letter-spacing: -0.006em; }
+  .pain-a { font-size: 0.875rem; color: var(--muted); line-height: 1.55; }
+
+  /* ---------- steps ---------- */
+
+  .steps { display: flex; flex-direction: column; }
+  .step {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: clamp(1rem, 3vw, 2.5rem);
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--rule);
+    align-items: start;
+    position: relative;
+  }
+  .step:last-child { border-bottom: 1px solid var(--rule); }
+  .step-n { font-family: var(--f-mono); font-size: 0.8125rem; color: var(--accent); padding-top: 0.18rem; }
+  .step-main { display: flex; flex-direction: column; gap: 0.4rem; }
+  .step-t { font-family: var(--f-mono); font-size: 1.0625rem; font-weight: 500; letter-spacing: -0.008em; }
+  .step-time { font-family: var(--f-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: var(--tr-label); text-transform: uppercase; color: var(--muted); }
+  .step-out { display: flex; flex-direction: column; gap: 0.5rem; }
+  .step-out p { font-size: 0.875rem; line-height: 1.55; color: var(--muted); }
+  .step-out strong { color: var(--fg); }
+  @media (max-width: 780px) {
+    .step { grid-template-columns: 2rem minmax(0, 1fr); }
+    .step-out { grid-column: 2; }
+  }
+
+  /* ---------- services ---------- */
+
+  .svcs { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: clamp(1.5rem, 3vw, 2.5rem); }
+  .svc {
+    border-left: 2px solid var(--rule-strong);
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    transition: border-color 160ms ease;
+  }
+  .svc:hover { border-left-color: var(--accent); }
+  .svc-name { font-family: var(--f-mono); font-size: 1.0625rem; font-weight: 500; letter-spacing: -0.008em; }
+  .svc-lead { font-size: 0.875rem; line-height: 1.55; color: var(--muted); }
+  .svc ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+  .svc li { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.01em; line-height: 1.5; color: var(--fg); display: flex; gap: 0.6rem; }
+  .svc li::before { content: "—"; color: var(--rule-strong); flex: none; }
+
+  /* ---------- who ---------- */
+
+  .who { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  @media (max-width: 780px) { .who { grid-template-columns: 1fr; } }
+  .who-copy { display: flex; flex-direction: column; gap: 1.125rem; }
+  .who-copy p { font-size: 1rem; line-height: 1.62; }
+  .creds { border-top: 1px solid var(--rule); margin: 0; }
+  .cred { display: flex; justify-content: space-between; gap: 1.5rem; padding: 0.8rem 0; border-bottom: 1px solid var(--rule); }
+  .cred dt { font-size: 0.8125rem; color: var(--muted); }
+  .cred dd { font-family: var(--f-mono); font-size: 0.8125rem; margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* ---------- sócios ---------- */
+
+  .partners { display: grid; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .partner { background: var(--surface); padding: 1.5rem 1.375rem; display: flex; flex-direction: column; gap: 0.875rem; }
+  .partner-head { display: flex; flex-direction: column; gap: 0.3rem; }
+  .partner-name { font-family: var(--f-mono); font-size: 1rem; font-weight: 500; letter-spacing: -0.006em; }
+  .partner-role { font-family: var(--f-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: var(--tr-label); text-transform: uppercase; color: var(--muted); }
+  .partner p { font-size: 0.875rem; line-height: 1.58; color: var(--muted); }
+  .partner-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: auto; padding-top: 0.25rem; }
+  .tag { font-family: var(--f-mono); font-size: 0.625rem; font-weight: 500; letter-spacing: var(--tr-label); text-transform: uppercase; color: var(--muted); border: 1px solid var(--rule-strong); padding: 0.2rem 0.5rem 0.2rem 0.55rem; }
+
+  .pquote {
+    border-left: 2px solid var(--accent);
+    padding: 0.35rem 0 0.35rem 1.25rem;
+    font-family: var(--f-mono);
+    font-size: clamp(1rem, 2.4vw, 1.25rem);
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    max-width: 48ch;
+  }
+
+  /* ---------- honest / risk ---------- */
+
+  .honest { background: var(--surface); border: 1px solid var(--rule); padding: clamp(1.75rem, 4vw, 2.75rem); display: flex; flex-direction: column; gap: 1.75rem; }
+  .honest-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.5rem; }
+  .honest-item { display: flex; flex-direction: column; gap: 0.45rem; }
+  .honest-t { font-family: var(--f-mono); font-size: 0.875rem; font-weight: 500; line-height: 1.45; }
+  .honest-d { font-size: 0.8125rem; line-height: 1.55; color: var(--muted); }
+
+  /* ---------- cta ---------- */
+
+  .cta { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  @media (max-width: 780px) { .cta { grid-template-columns: 1fr; } }
+  .cta-copy { display: flex; flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+  .next { display: flex; flex-direction: column; }
+  .next-row { display: grid; grid-template-columns: 1.5rem 1fr; gap: 1rem; padding: 0.8rem 0; border-top: 1px solid var(--rule); }
+  .next-row:last-child { border-bottom: 1px solid var(--rule); }
+  .next-n { font-family: var(--f-mono); font-size: 0.6875rem; color: var(--accent); padding-top: 0.28rem; }
+  .next-t { font-size: 0.875rem; line-height: 1.55; }
+
+  /* ---------- footer ---------- */
+
+  footer { border-top: 1px solid var(--rule); padding: 2.5rem 0 3.5rem; }
+  .foot-in { display: flex; flex-wrap: wrap; gap: 1.5rem 2.5rem; justify-content: space-between; align-items: flex-end; }
+  .foot-id { display: flex; flex-direction: column; gap: 0.75rem; }
+  .foot-brand { display: flex; align-items: center; gap: 0.7rem; }
+  .foot-brand svg { width: 1.25rem; height: 1.25rem; display: block; }
+  .foot-brand span { font-family: var(--f-mono); font-weight: 500; font-size: 0.9375rem; letter-spacing: var(--tr-logo); }
+  .foot-meta { display: flex; flex-direction: column; gap: 0.25rem; text-align: right; }
+  .foot-meta a:hover { color: var(--fg); }
+  @media (max-width: 560px) { .foot-meta { text-align: left; } }
+
+  /* ---------- simbolo: os tres pesos do guia ----------
+     >= 96 px: dois arcos e ponto. 24–95 px: um arco, traco 2x, ponto maior.
+     < 24 px: anel fechado. O arco externo e o gap sao os primeiros a empastar. */
+
+  .sym { fill: none; stroke: var(--fg); }
+  .sym-g { stroke-width: 3; }          /* grande */
+  .sym-m { stroke-width: 5; }          /* medio  */
+  .sym-p { stroke-width: 6.75; }       /* minimo */
+  .sym-dot { fill: var(--accent); }
+
+  .hero-mark .draw-1 { stroke-dasharray: 68; stroke-dashoffset: 68; animation: draw 900ms 250ms cubic-bezier(0.32, 0.72, 0.16, 1) forwards; }
+  .hero-mark .draw-2 { stroke-dasharray: 106; stroke-dashoffset: 106; animation: draw 1150ms 400ms cubic-bezier(0.32, 0.72, 0.16, 1) forwards; }
+  .hero-mark .sym-dot { opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(0.4); animation: pop 520ms 120ms cubic-bezier(0.2, 0.9, 0.24, 1) forwards; }
+
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes pop { to { opacity: 1; transform: scale(1); } }
+
+  .rise { opacity: 0; transform: translateY(0.5rem); animation: rise 620ms cubic-bezier(0.16, 0.84, 0.28, 1) forwards; }
+  .rise-1 { animation-delay: 60ms; }
+  .rise-2 { animation-delay: 150ms; }
+  .rise-3 { animation-delay: 240ms; }
+  .rise-4 { animation-delay: 330ms; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  /* Revelacao por scroll. So entra em cena quando o JS marca o documento —
+     sem JS o conteudo ja esta visivel, nunca em branco. */
+  .js .reveal { opacity: 0; transform: translateY(0.75rem); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
+  .js .reveal.in { opacity: 1; transform: none; }
+
+  /* Cascata: os itens de uma grade entram um a um, na ordem de leitura.
+     So para componentes cujos filhos nao dividem um fundo de regua — em .pains e
+     .partners o fundo do container E a linha da grade, entao la o bloco inteiro
+     entra de uma vez ou a regua aparece sozinha antes dos cartoes. */
+  .js .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(0.75rem);
+    transition: opacity 640ms var(--ease), transform 640ms var(--ease);
+  }
+  .js .reveal-stagger.in > * { opacity: 1; transform: none; }
+  .js .reveal-stagger.in > *:nth-child(2) { transition-delay: 80ms; }
+  .js .reveal-stagger.in > *:nth-child(3) { transition-delay: 160ms; }
+  .js .reveal-stagger.in > *:nth-child(4) { transition-delay: 240ms; }
+  .js .reveal-stagger.in > *:nth-child(5) { transition-delay: 320ms; }
+
+  /* As etapas se desenham como uma folha de dados sendo preenchida: a regua
+     corre da esquerda para a direita e o conteudo da etapa entra atras dela.
+     A borda real vira transparente e um pseudo-elemento assume — borda nao se
+     anima, mas ocupa o mesmo 1px, entao nada salta de lugar. */
+  .js .reveal-rules .step { border-top-color: transparent; }
+  .js .reveal-rules .step:last-child { border-bottom-color: transparent; }
+  .js .reveal-rules .step::before,
+  .js .reveal-rules .step:last-child::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--rule);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 900ms var(--ease);
+  }
+  .js .reveal-rules .step::before { top: -1px; }
+  .js .reveal-rules .step:last-child::after { bottom: -1px; }
+  .js .reveal-rules.in .step::before,
+  .js .reveal-rules.in .step:last-child::after { transform: scaleX(1); }
+  .js .reveal-rules.in .step:nth-child(2)::before { transition-delay: 130ms; }
+  .js .reveal-rules.in .step:nth-child(3)::before { transition-delay: 260ms; }
+  .js .reveal-rules.in .step:last-child::after { transition-delay: 390ms; }
+
+  .js .reveal-rules .step > * {
+    opacity: 0;
+    transform: translateY(0.5rem);
+    transition: opacity 640ms var(--ease), transform 640ms var(--ease);
+  }
+  .js .reveal-rules.in .step > * { opacity: 1; transform: none; }
+  .js .reveal-rules.in .step:nth-child(1) > * { transition-delay: 90ms; }
+  .js .reveal-rules.in .step:nth-child(2) > * { transition-delay: 220ms; }
+  .js .reveal-rules.in .step:nth-child(3) > * { transition-delay: 350ms; }
+
+  /* Paralaxe ligado a rolagem, sem JS e sem listener de scroll: o navegador
+     interpola no compositor. Limitado ao desktop e aos primeiros 90vh — e o
+     trecho em que o hero ainda esta na tela. */
+  @supports (animation-timeline: scroll()) {
+    @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+      .hero-copy,
+      .hero-mark,
+      .hero-mark .halo {
+        animation-timeline: scroll(root block);
+        animation-range: 0 90vh;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+      }
+      /* A copy fica para tras da rolagem e a marca se adianta: a separacao entre
+         as duas camadas e o que da profundidade, nao a distancia percorrida. */
+      .hero-copy { animation-name: hero-lag; }
+      .hero-mark { animation-name: mark-lead; }
+      .hero-mark .halo {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation-name: halo-ripple;
+      }
+    }
+  }
+
+  @keyframes hero-lag { to { transform: translateY(2.25rem); } }
+  @keyframes mark-lead { to { transform: translateY(-1.5rem); } }
+  @keyframes halo-ripple { to { transform: scale(1.24); opacity: 0.1; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-mark .draw-1, .hero-mark .draw-2 { stroke-dashoffset: 0; animation: none; }
+    .hero-mark .sym-dot { opacity: 1; transform: none; animation: none; }
+    .rise { opacity: 1; transform: none; animation: none; }
+    .js .reveal, .js .reveal.in { opacity: 1; transform: none; transition: none; }
+    .js .reveal-stagger > *,
+    .js .reveal-rules .step > * { opacity: 1; transform: none; transition: none; }
+    .js .reveal-rules .step { border-top-color: var(--rule); }
+    .js .reveal-rules .step:last-child { border-bottom-color: var(--rule); }
+    .js .reveal-rules .step::before,
+    .js .reveal-rules .step::after { display: none; }
+    .btn, .svc, .theme, .nav-links a.lbl { transition: none; }
+  }
+
+  /* ---------- impressao ----------
+     Cliente imprime ou salva em PDF para levar a reuniao. Papel e tinta,
+     sem faixas de fundo e com os enderecos escritos por extenso. */
+
+  @media print {
+    :root {
+      --bg: #FFFFFF; --surface: #FFFFFF; --fg: #100D14;
+      --muted: #4A4553; --rule: #C9C5D0; --rule-strong: #9A94A6; --accent: #5A3A82;
+    }
+    .nav, .theme, .halo, .skip, .hero-cta, .btn { display: none !important; }
+    body { font-size: 11pt; line-height: 1.45; }
+    .band { padding: 1.25rem 0; break-inside: avoid; }
+    .honest, .pain, .partner { background: transparent; }
+    .reveal, .rise, .reveal-stagger > *, .reveal-rules .step > * {
+      opacity: 1 !important; transform: none !important; animation: none !important;
+    }
+    .reveal-rules .step { border-top-color: var(--rule) !important; }
+    .reveal-rules .step:last-child { border-bottom-color: var(--rule) !important; }
+    .reveal-rules .step::before, .reveal-rules .step::after { display: none !important; }
+    a[href^="mailto:"]::after { content: " (" attr(href) ")"; font-family: var(--f-mono); font-size: 0.8em; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#top">Pular para o conteúdo</a>
+
+<nav class="nav" id="nav" aria-label="Principal">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="Fontis, início">
+      <!-- 26 px: peso medio do simbolo — um arco, traco dobrado, ponto maior. -->
+      <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <path class="sym sym-m" d="M21.835 42.915 A14.375 14.375 0 1 1 42.165 42.915"/>
+        <circle class="sym-dot" cx="32" cy="32.75" r="6.75"/>
+      </svg>
+      <span class="brand-name">fontis</span>
+    </a>
+    <div class="nav-links">
+      <a class="lbl hide-sm" href="#como">Como trabalhamos</a>
+      <a class="lbl hide-sm" href="#servicos">Serviços</a>
+      <a class="lbl hide-sm" href="#quem">Quem atende</a>
+      <button class="theme" id="theme" type="button" aria-label="Alternar tema">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle class="t-ring" cx="12" cy="12" r="8.2"/>
+          <path class="t-half" d="M12 3.8 A8.2 8.2 0 0 1 12 20.2 Z"/>
+        </svg>
+      </button>
+      <a class="btn btn-cta" href="mailto:contato@fontislabs.com.br?subject=Diagn%C3%B3stico%20t%C3%A9cnico"><span class="hide-sm">Agendar diagnóstico</span><span class="only-sm">Diagnóstico</span></a>
+    </div>
+  </div>
+  <div class="nav-sm">
+    <a class="lbl" href="#como">Como trabalhamos</a>
+    <a class="lbl" href="#servicos">Serviços</a>
+    <a class="lbl" href="#quem">Quem atende</a>
+    <a class="lbl" href="#risco">Quando não nos contratar</a>
+  </div>
+</nav>
+
+<main id="top" tabindex="-1">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="lbl rise rise-1">Consultoria · Engenharia · Dados</span>
+          <h1 class="rise rise-2">Cresceu além<br>da planilha.</h1>
+          <p class="hero-sub rise rise-3">Sua empresa passou do ponto em que planilha e fornecedor avulso dão conta — e ainda não tem um time de tecnologia próprio. Desenhamos a arquitetura, construímos o sistema e deixamos a operação rodando sem depender de nós.</p>
+          <div class="hero-act rise rise-4">
+            <div class="hero-cta" id="hero-cta">
+              <a class="btn btn-lg" href="mailto:contato@fontislabs.com.br?subject=Diagn%C3%B3stico%20t%C3%A9cnico">Agendar diagnóstico</a>
+              <a class="btn btn-lg btn-ghost" href="#como">Como trabalhamos</a>
+            </div>
+            <p class="hero-spec">
+              <span>30 minutos</span>
+              <span>sem apresentação comercial</span>
+              <span>escopo em até 3 dias úteis</span>
+            </p>
+          </div>
+        </div>
+        <div class="hero-mark">
+          <!-- >= 96 px: peso grande, os dois arcos na proporcao verdadeira. -->
+          <svg viewBox="0 0 64 64" role="img" aria-label="Símbolo da Fontis: a nascente">
+            <g class="halo" aria-hidden="true">
+              <circle cx="32" cy="32" r="34"/>
+              <circle cx="32" cy="32" r="48"/>
+              <circle cx="32" cy="32" r="64"/>
+              <circle cx="32" cy="32" r="82"/>
+            </g>
+            <path class="sym sym-g draw-1" d="M25.11 43.02 A13 13 0 1 1 38.89 43.02"/>
+            <path class="sym sym-g draw-2" d="M17.28 48.35 A22 22 0 1 1 46.72 48.35"/>
+            <circle class="sym-dot" cx="32" cy="32" r="4.5"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="facts reveal-stagger">
+        <div class="fact">
+          <span class="fact-n">2 sócios</span>
+          <span class="lbl">que atendem direto</span>
+        </div>
+        <div class="fact">
+          <span class="fact-n">10 anos</span>
+          <span class="lbl">cada um em tecnologia</span>
+        </div>
+        <div class="fact">
+          <span class="fact-n">6 – 12</span>
+          <span class="lbl">semanas por projeto</span>
+        </div>
+        <div class="fact">
+          <span class="fact-n">Fechado</span>
+          <span class="lbl">escopo e preço</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEMA -->
+  <section class="band">
+    <div class="wrap band-in">
+      <div class="band-head reveal">
+        <span class="lbl band-idx"><span class="n">01</span> O que costuma estar acontecendo</span>
+        <h2>Três sinais de que o problema não é ferramenta</h2>
+      </div>
+      <div class="pains reveal">
+        <div class="pain">
+          <p class="pain-q">Você virou o gargalo técnico.</p>
+          <p class="pain-a">Toda decisão de sistema passa por você, e você não é da área. O time espera, o fornecedor espera, e a fila cresce no seu e-mail.</p>
+        </div>
+        <div class="pain">
+          <p class="pain-q">O número chega tarde e ninguém confia nele.</p>
+          <p class="pain-a">O relatório sai no dia 10, alguém corrige à mão, e no fim a reunião discute se o dado está certo em vez de discutir a decisão.</p>
+        </div>
+        <div class="pain">
+          <p class="pain-q">Cada fornecedor dá uma resposta diferente.</p>
+          <p class="pain-a">Um diz que precisa reescrever tudo, outro diz que é rápido. Sem alguém técnico do seu lado da mesa, você escolhe pelo preço — e paga duas vezes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO -->
+  <section class="band" id="como">
+    <div class="wrap band-in">
+      <div class="band-head reveal">
+        <span class="lbl band-idx"><span class="n">02</span> Como trabalhamos</span>
+        <h2>Da fonte à decisão, em três etapas</h2>
+        <p class="prose note">Cada etapa tem prazo e entrega definidos antes de começar. Você aprova o escopo da seguinte com o resultado da anterior na mão — não com uma promessa.</p>
+      </div>
+      <div class="steps reveal-rules">
+        <div class="step">
+          <span class="step-n">01</span>
+          <div class="step-main">
+            <span class="step-t">Diagnóstico</span>
+            <span class="step-time">1 a 2 semanas</span>
+          </div>
+          <div class="step-out">
+            <p>Mapeamos o que existe: sistemas, integrações, onde o dado nasce e onde ele se perde. Você recebe o <strong>mapa da arquitetura</strong>, os <strong>riscos nomeados um por um</strong> e um <strong>escopo com preço fechado</strong> para a etapa seguinte.</p>
+            <p>Se o diagnóstico concluir que você não precisa da etapa 2, a gente diz isso.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-n">02</span>
+          <div class="step-main">
+            <span class="step-t">Construção</span>
+            <span class="step-time">4 a 8 semanas</span>
+          </div>
+          <div class="step-out">
+            <p>Construímos o que foi aprovado — sistema, integração, automação ou pipeline de dados. Entrega em produção, com <strong>documentação</strong> e <strong>acesso ao código desde o primeiro dia</strong>.</p>
+            <p>Reunião de 30 minutos por semana, sempre com algo funcionando para mostrar.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-n">03</span>
+          <div class="step-main">
+            <span class="step-t">Autonomia</span>
+            <span class="step-time">1 a 2 semanas</span>
+          </div>
+          <div class="step-out">
+            <p>Passamos a operação para o seu time ou para o fornecedor que vai manter: <strong>treinamento</strong>, <strong>runbook</strong> e <strong>handover técnico</strong>. O objetivo declarado é você não precisar mais da gente.</p>
+            <p>Contrato de manutenção existe, mas é opcional e você decide depois de ver o sistema rodando.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVIÇOS -->
+  <section class="band" id="servicos">
+    <div class="wrap band-in">
+      <div class="band-head reveal">
+        <span class="lbl band-idx"><span class="n">03</span> Serviços</span>
+        <h2>Três linhas, uma origem</h2>
+      </div>
+      <div class="svcs reveal-stagger">
+        <div class="svc">
+          <h3 class="svc-name">Consultoria</h3>
+          <p class="svc-lead">Alguém técnico do seu lado da mesa, quando a decisão é de negócio mas a consequência é de engenharia.</p>
+          <ul>
+            <li>Arquitetura e escolha de stack</li>
+            <li>Diagnóstico de time e processo</li>
+            <li>Interlocução técnica com fornecedores</li>
+            <li>Due diligence técnica</li>
+            <li>Revisão de contrato de software</li>
+          </ul>
+        </div>
+        <div class="svc">
+          <h3 class="svc-name">Engenharia</h3>
+          <p class="svc-lead">Construção do que foi desenhado, sem terceirizar para uma fila que você não controla.</p>
+          <ul>
+            <li>Sites e aplicações web</li>
+            <li>Portais de cliente e área logada</li>
+            <li>Integrações e APIs</li>
+            <li>Migração de sistema legado</li>
+            <li>Ambiente, deploy e monitoramento</li>
+          </ul>
+        </div>
+        <div class="svc">
+          <h3 class="svc-name">Dados</h3>
+          <p class="svc-lead">Do lugar onde o número nasce até a tela onde a decisão é tomada — sem planilha no meio do caminho.</p>
+          <ul>
+            <li>Automação de processo manual</li>
+            <li>Pipelines e integração de fontes</li>
+            <li>Conciliação e fechamento</li>
+            <li>Painéis de decisão</li>
+            <li>Alerta e checagem automática</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUEM -->
+  <section class="band" id="quem">
+    <div class="wrap band-in">
+      <div class="band-head reveal">
+        <span class="lbl band-idx"><span class="n">04</span> Quem atende</span>
+        <h2>Quem senta na reunião é quem escreve o código</h2>
+        <p class="prose note">Somos dois sócios. Não existe gerente de contas, não existe repasse para uma fila: o projeto é atendido por quem respondeu o seu primeiro e-mail.</p>
+      </div>
+
+      <div class="partners reveal">
+        <div class="partner">
+          <div class="partner-head">
+            <h3 class="partner-name">Gabriel Moretti</h3>
+            <span class="partner-role">Arquitetura e decisão</span>
+          </div>
+          <p>Dez anos em tecnologia, quase sempre em cargos colados em quem decide. Traduz decisão de negócio em decisão técnica — e o contrário, que é a parte que quase ninguém faz.</p>
+          <div class="partner-tags">
+            <span class="tag">Arquitetura</span>
+            <span class="tag">Gestão técnica</span>
+            <span class="tag">Pagamentos</span>
+          </div>
+        </div>
+        <div class="partner">
+          <div class="partner-head">
+            <h3 class="partner-name">Renan Bertolotti</h3>
+            <span class="partner-role">Operação e resiliência</span>
+          </div>
+          <p>Dez anos em tecnologia, quase sempre no lado que atende quando o sistema cai. Aponta onde o desenho vai quebrar antes de ele entrar em produção — que é a parte que não aparece em diagrama nenhum.</p>
+          <div class="partner-tags">
+            <span class="tag">Suporte</span>
+            <span class="tag">Operação</span>
+            <span class="tag">Automação</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="pquote reveal">Um de nós veio da mesa onde a decisão é tomada. O outro, da mesa onde o sistema quebra.</p>
+
+      <div class="who reveal">
+        <div class="who-copy">
+          <p>Essas duas origens resolvem problemas diferentes do mesmo projeto. Uma desenha o sistema que a empresa vai precisar em dois anos; a outra sabe o que vai dar errado na terça-feira de manhã. Projeto de tecnologia costuma falhar por falta da segunda, não da primeira.</p>
+          <p>Boa parte desses anos foi em pagamentos, onde um número errado não é um relatório feio — é dinheiro no lugar errado. Esse rigor vem junto.</p>
+          <p class="note">A Fontis é pequena de propósito. Quando o projeto pede uma competência que não é nossa — design de interface, por exemplo — trazemos um especialista que já trabalha com a gente há tempo. A responsabilidade pela entrega continua sendo nossa, nunca do parceiro.</p>
+        </div>
+        <dl class="creds">
+          <div class="cred"><dt>Sócios</dt><dd>2</dd></div>
+          <div class="cred"><dt>Em tecnologia</dt><dd>10 anos cada</dd></div>
+          <div class="cred"><dt>Origens</dt><dd>Decisão e operação</dd></div>
+          <div class="cred"><dt>Foco de setor</dt><dd>Pagamentos</dd></div>
+          <div class="cred"><dt>Especialistas</dt><dd>Sob demanda</dd></div>
+          <div class="cred"><dt>Quem responde</dt><dd>Sempre um sócio</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUANDO NÃO -->
+  <section class="band" id="risco">
+    <div class="wrap band-in">
+      <div class="honest reveal">
+        <div class="band-head">
+          <span class="lbl band-idx"><span class="n">05</span> Antes de você gastar tempo</span>
+          <h2>Quando não nos contratar</h2>
+          <p class="prose note">Consultoria séria nomeia o risco antes de assinar. Nestes quatro casos a gente não é a escolha certa, e dizer isso agora custa menos para nós dois.</p>
+        </div>
+        <div class="honest-list">
+          <div class="honest-item">
+            <span class="honest-t">Você precisa de um dev júnior full-time e barato.</span>
+            <span class="honest-d">Nosso modelo é escopo fechado com prazo curto. Para cadeira preenchida por mês, uma consultoria custa mais e entrega menos.</span>
+          </div>
+          <div class="honest-item">
+            <span class="honest-t">A decisão já foi tomada e você quer validação.</span>
+            <span class="honest-d">Se o diagnóstico não pode mudar o plano, ele não vale o que custa. Prefira gastar esse dinheiro na execução.</span>
+          </div>
+          <div class="honest-item">
+            <span class="honest-t">O prazo é "para ontem".</span>
+            <span class="honest-d">Diagnóstico leva de uma a duas semanas. Quem promete arquitetura em três dias está chutando, e você paga o chute depois.</span>
+          </div>
+          <div class="honest-item">
+            <span class="honest-t">Ninguém do seu lado pode decidir.</span>
+            <span class="honest-d">Precisamos de uma pessoa com autoridade para aprovar escopo. Sem isso o projeto trava na etapa 1 e o custo continua correndo.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="band" id="contato">
+    <div class="wrap band-in">
+      <div class="cta reveal">
+        <div class="cta-copy">
+          <span class="lbl band-idx"><span class="n">06</span> Próximo passo</span>
+          <h2>Comece pelo diagnóstico</h2>
+          <p class="prose">Sem apresentação comercial, sem proposta de 40 páginas. Uma conversa de 30 minutos para entendermos o problema e te dizermos se temos como ajudar.</p>
+          <a class="btn btn-lg" href="mailto:contato@fontislabs.com.br?subject=Diagn%C3%B3stico%20t%C3%A9cnico">Agendar diagnóstico</a>
+          <a class="lbl" href="mailto:contato@fontislabs.com.br">contato@fontislabs.com.br</a>
+        </div>
+        <div class="next">
+          <div class="next-row">
+            <span class="next-n">01</span>
+            <span class="next-t">Você manda três linhas sobre o problema.</span>
+          </div>
+          <div class="next-row">
+            <span class="next-n">02</span>
+            <span class="next-t">Conversamos 30 minutos, por vídeo ou telefone.</span>
+          </div>
+          <div class="next-row">
+            <span class="next-n">03</span>
+            <span class="next-t">Em até 3 dias úteis você recebe o escopo com preço fechado — ou um "não é com a gente" com a indicação de quem é.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-id">
+      <div class="foot-brand">
+        <!-- 20 px: peso minimo — anel fechado. O gap dos arcos vira sujeira nesse tamanho. -->
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <circle class="sym sym-p" cx="32" cy="32" r="15.25"/>
+          <circle class="sym-dot" cx="32" cy="32" r="6.75"/>
+        </svg>
+        <span>fontis</span>
+      </div>
+      <span class="lbl">Da fonte à decisão</span>
+    </div>
+    <div class="foot-meta">
+      <span class="lbl">Fontis Labs · CNPJ [a definir]</span>
+      <a class="lbl" href="mailto:contato@fontislabs.com.br">contato@fontislabs.com.br</a>
+      <span class="lbl">fontislabs.com.br</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add('js');
+
+    /* ---- tema ---- */
+    var KEY = 'fontis-theme';
+    var btn = document.getElementById('theme');
+
+    function effective() {
+      var a = root.getAttribute('data-theme');
+      if (a === 'light' || a === 'dark') return a;
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function sync() {
+      if (!btn) return;
+      var claro = effective() !== 'dark';
+      btn.setAttribute('aria-label', claro ? 'Mudar para tema escuro' : 'Mudar para tema claro');
+      btn.setAttribute('title', claro ? 'Tema escuro' : 'Tema claro');
+      btn.setAttribute('aria-pressed', String(!claro));
+    }
+
+    if (btn) {
+      btn.addEventListener('click', function () {
+        var next = effective() === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem(KEY, next); } catch (e) {}
+        sync();
+      });
+    }
+
+    if (window.matchMedia) {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      var onChange = function () { if (!root.getAttribute('data-theme')) sync(); };
+      if (mq.addEventListener) { mq.addEventListener('change', onChange); }
+      else if (mq.addListener) { mq.addListener(onChange); }
+    }
+
+    sync();
+
+    var reduz = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var temIO = 'IntersectionObserver' in window;
+
+    /* ---- revelacao por scroll ---- */
+    var alvos = document.querySelectorAll('.reveal, .reveal-stagger, .reveal-rules');
+    if (!temIO || reduz) {
+      for (var i = 0; i < alvos.length; i++) alvos[i].classList.add('in');
+    } else {
+      var io = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        });
+      }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+      for (var j = 0; j < alvos.length; j++) io.observe(alvos[j]);
+    }
+
+    /* ---- CTA da nav: so vira botao cheio quando o do hero sai de cena,
+           para manter um unico acento preenchido por tela ---- */
+    var nav = document.getElementById('nav');
+    var heroCta = document.getElementById('hero-cta');
+    if (nav && heroCta && temIO) {
+      new IntersectionObserver(function (entradas) {
+        nav.classList.toggle('is-stuck', !entradas[0].isIntersecting);
+      }, { threshold: 0 }).observe(heroCta);
+    } else if (nav) {
+      nav.classList.add('is-stuck');
+    }
+  })();
+</script>
+</body>
+</html>

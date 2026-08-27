@@ -1,0 +1,18 @@
+# Segredos — o site e estatico e nao deveria ter nenhum, mas a rede fica armada.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dependencias e build
+node_modules/
+dist/
+.cache/
+
+# Ruido de SO e editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log

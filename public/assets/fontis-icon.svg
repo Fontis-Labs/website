@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Fontis">
+  <rect width="512" height="512" fill="#100D14"/>
+  <g fill="none" stroke="#F5F4F7" stroke-width="20">
+    <path d="M210.96 336.08 A85 85 0 1 1 301.04 336.08"/>
+    <path d="M159.65 371.01 A144 144 0 1 1 352.35 371.01"/>
+  </g>
+  <circle cx="256" cy="264" r="30" fill="#A585D8"/>
+</svg>

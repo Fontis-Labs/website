@@ -1,0 +1,44 @@
+# Publica o conteudo de public/ no GitHub Pages.
+#
+# Comece manualmente (aba Actions > deploy > Run workflow). So descomente o gatilho de
+# push depois que os tres passos do README ("Como publicar") estiverem feitos — antes
+# disso o job falha em vermelho a cada commit sem publicar nada.
+name: deploy
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Uma publicacao por vez; a que estiver na fila e descartada em favor da mais nova.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Verificar assets antes de publicar
+        run: node scripts/check-assets.mjs
+
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./public
+      - id: deployment
+        uses: actions/deploy-pages@v5
