@@ -23,13 +23,17 @@ WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 cp -R "$ROOT/public/." "$WORK/"
 
-# O tema escuro e persistido em localStorage, que a captura nao alcanca. Fixar o
-# atributo no <html> reproduz exatamente o mesmo estado.
-if [ "$THEME" = "dark" ]; then
-  sed -i '' 's/<html lang="pt-BR" data-theme-pending>/<html lang="pt-BR" data-theme="dark">/' "$WORK/index.html"
-fi
+# O tema e persistido em localStorage, que a captura nao alcanca. Fixar o atributo no
+# <html> reproduz o mesmo estado — e tem que ser fixado nos DOIS casos: sem isso o
+# tema segue o do sistema operacional, e "light" sai escuro numa maquina em dark mode.
+sed -i '' "s/<html lang=\"pt-BR\" data-theme-pending>/<html lang=\"pt-BR\" data-theme=\"$THEME\">/" "$WORK/index.html"
+
+# Alturas maiores que a janela ficam de fora da captura, entao a janela e a pagina.
+# 3000 e o piso; ROLL define quanto capturar quando a pagina e mais alta que isso.
+HEIGHT="${ROLL:-3000}"
 
 "$CHROME" --headless --disable-gpu --hide-scrollbars --force-prefers-reduced-motion \
-  --window-size="$WIDTH,3000" --screenshot="$OUT" "file://$WORK/index.html" 2>/dev/null
+  --window-size="$WIDTH,$HEIGHT" --virtual-time-budget=3000 \
+  --screenshot="$OUT" "file://$WORK/index.html" 2>/dev/null
 
 echo "$OUT"
