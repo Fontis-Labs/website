@@ -85,8 +85,9 @@ vazio. É uma configuração de 10 minutos, não uma migração.
 - O tema claro é o padrão e o escuro vem de `prefers-color-scheme`, com o toggle salvo
   em `localStorage`. O script que aplica o tema roda antes da primeira pintura — se
   você movê-lo para depois do `<body>`, quem usa o escuro passa a ver um flash branco.
-- O acento ametista fica limitado a ~5% da área da tela. Roxo em área grande fica brega
-   — isso está no guia de marca, não é preferência de quem editou por último.
+- O acento ametista fica limitado a ~10% da área da tela, gasto nesta ordem: a ação que
+  importa, depois *um* bloco de superfície, e só então detalhe. Roxo em área grande fica
+  brega — isso está no guia de marca, não é preferência de quem editou por último.
 - Mudou de seção ou de proposta? Atualize a `<meta name="description">`, as tags `og:` e
   o `lastmod` do `sitemap.xml` no mesmo commit.
 
