@@ -7,16 +7,21 @@
 <title>Fontis — Consultoria, engenharia e dados</title>
 <meta name="description" content="Dois sócios que desenham a arquitetura, constroem o sistema e entregam a operação rodando. Diagnóstico com escopo e preço fechados em 1 a 2 semanas.">
 <meta name="author" content="Fontis Labs">
-<link rel="canonical" href="https://fontislabs.com.br/">
+<link rel="canonical" href="https://fontis-labs.github.io/website/">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Fontis Labs">
 <meta property="og:title" content="Fontis — Da fonte à decisão">
 <meta property="og:description" content="Dois sócios que desenham a arquitetura, constroem o sistema e entregam a operação rodando. Diagnóstico com escopo e preço fechados.">
-<meta property="og:url" content="https://fontislabs.com.br/">
-<meta property="og:image" content="https://fontislabs.com.br/assets/icons/fontis-icon-512.png">
-<meta name="twitter:card" content="summary">
+<meta property="og:url" content="https://fontis-labs.github.io/website/">
+<!-- Imagem dedicada de 1200x630: icone quadrado rende miniatura pequena, nao card grande. -->
+<meta property="og:image" content="https://fontis-labs.github.io/website/assets/og/fontis-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Logotipo da Fontis sobre fundo escuro, com a frase: da fonte à decisão.">
+<meta name="twitter:card" content="summary_large_image">
 
 <!-- Favicon conforme o guia de marca, secao 8: SVG para navegador moderno, .ico legado com 16/32/48 embutidos, PNG sem transparencia para iOS. -->
 <link rel="icon" href="favicon.ico" sizes="32x32">
@@ -90,9 +95,30 @@
     --muted: #605A6B;
     --rule: #D7D4DD;
     --rule-strong: #B8B3C2;
-    --accent: #5A3A82;
+    --accent: var(--accent-500);
     --accent-fg: #F5F4F7;
-    --accent-soft: #E2DBEC;
+
+    /* Rampa da ametista: matiz e saturacao do #5A3A82 (H 266,7 / S 38,3 %), so a
+       luminosidade varia — por isso o 500 cai exatamente no valor do guia.
+       100-300 sao superficie e borda, NUNCA texto. 400-700 servem para texto.
+       O 500 e o acento do guia e nao muda: e valor de marca, nao de sistema.
+       Orcamento de area do acento: 10 %, gasto nesta ordem — a acao que importa,
+       depois UM bloco de superficie, e so o que sobrar em detalhe. Nunca fundo
+       cheio, nunca gradiente, nunca dois roxos na mesma peca. */
+    --accent-100: #EFEAF6;
+    --accent-200: #DACEE9;
+    --accent-300: #BAA3D6;
+    --accent-400: #8F6BBD;
+    --accent-500: #5A3A82;
+    --accent-600: #472E66;
+    --accent-700: #33214A;
+
+    /* Cores funcionais: significado, nao decoracao. Todas conferidas em AA (>= 4,5:1)
+       para texto normal sobre o fundo do seu tema. */
+    --success: #1B6B45;
+    --warning: #8A5A00;
+    --danger: #A32118;
+    --info: #2C5AA8;
 
     --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
     --f-sans: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -118,9 +144,23 @@
       --muted: #918B9C;
       --rule: #26212F;
       --rule-strong: #3D3648;
-      --accent: #A585D8;
+      --accent: var(--accent-500);
       --accent-fg: #0C0A10;
-      --accent-soft: #241B33;
+
+      /* A rampa inverte no escuro: 100 continua sendo a superficie mais discreta e
+         700 a enfase maxima, mas os valores caminham na direcao oposta. */
+      --accent-100: #241B33;
+      --accent-200: #33214A;
+      --accent-300: #472E66;
+      --accent-400: #8F6BBD;
+      --accent-500: #A585D8;
+      --accent-600: #BAA3D6;
+      --accent-700: #DACEE9;
+
+      --success: #57C08A;
+      --warning: #E0A83C;
+      --danger: #F08279;
+      --info: #85AEEA;
     }
   }
 
@@ -131,9 +171,23 @@
     --muted: #918B9C;
     --rule: #26212F;
     --rule-strong: #3D3648;
-    --accent: #A585D8;
+    --accent: var(--accent-500);
     --accent-fg: #0C0A10;
-    --accent-soft: #241B33;
+
+    /* A rampa inverte no escuro: 100 continua sendo a superficie mais discreta e
+       700 a enfase maxima, mas os valores caminham na direcao oposta. */
+    --accent-100: #241B33;
+    --accent-200: #33214A;
+    --accent-300: #472E66;
+    --accent-400: #8F6BBD;
+    --accent-500: #A585D8;
+    --accent-600: #BAA3D6;
+    --accent-700: #DACEE9;
+
+    --success: #57C08A;
+    --warning: #E0A83C;
+    --danger: #F08279;
+    --info: #85AEEA;
   }
 
   * { box-sizing: border-box; }
@@ -284,6 +338,25 @@
   .btn-ghost:hover { border-color: var(--fg); opacity: 1; }
   .btn-lg { font-size: 0.875rem; padding: 0.8rem 1.4rem; }
 
+  /* CTA secundario rebaixado: link com regua, nao botao. Continua obvio e para de
+     competir com a acao que importa — uma acao primaria por tela. */
+  .link-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--f-mono);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--fg);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule-strong);
+    padding-bottom: 0.2rem;
+    transition: border-color 200ms var(--ease);
+  }
+  .link-arrow:hover { border-color: var(--fg); }
+  .link-arrow .arrow { transition: transform 200ms var(--ease); }
+  .link-arrow:hover .arrow { transform: translateX(0.2rem); }
+
   /* Regra dos 5 % de acento: so um botao cheio por tela. Enquanto o hero esta
      visivel o CTA da nav fica em contorno; quando o hero sai, ele assume o cheio. */
   .nav .btn-cta {
@@ -351,6 +424,9 @@
     align-items: start;
   }
   .hero-copy { display: flex; flex-direction: column; gap: 1.75rem; align-items: flex-start; }
+  /* O rotulo do hero e a unica linha que responde "o que e isso" antes da manchete.
+     Nos outros usos de .lbl o tamanho padrao serve; aqui ele carrega peso. */
+  .hero-copy > .lbl { font-size: 0.8125rem; color: var(--accent-500); }
   .hero-sub { font-size: clamp(1rem, 2.2vw, 1.1875rem); line-height: 1.55; max-width: 52ch; color: var(--fg); }
 
   /* Botao e o que vem depois dele andam juntos, com respiro menor que o do resto
@@ -385,6 +461,16 @@
     .hero-mark { order: -1; }
   }
 
+  /* No mobile o simbolo abre a tela e consome 39 % da dobra (257 px de 667). Apertar
+     o ritmo vertical do hero e o que traz o CTA de volta para cima da linha: medido em
+     375x667, sem isto o botao termina 12 px abaixo da dobra. Nao mexe no simbolo, que
+     tem tamanho normativo por peso no guia de marca. */
+  @media (max-width: 560px) {
+    .hero { padding-top: 1.5rem; }
+    .hero-grid { gap: 1.25rem; }
+    .hero-copy { gap: 1.375rem; }
+  }
+
   /* datasheet strip */
   .facts {
     margin-top: clamp(2.75rem, 6vw, 5rem);
@@ -409,6 +495,32 @@
 
   .band { border-top: 1px solid var(--rule); padding: var(--band) 0; }
   .band:first-of-type { border-top: none; }
+
+  /* Alternancia de fundo: cria respiro e sinaliza hierarquia sem mexer no conteudo.
+     A borda superior sai porque a mudanca de cor ja e a separacao.
+     SO PODE ser aplicada em secao que nao contenha cartao com background --surface
+     (.pain, .partner, .honest) — o cartao desapareceria dentro dela. Hoje isso
+     restringe a alternancia a #como, #servicos e #contato. */
+  .band-alt { background: var(--surface); border-top-color: transparent; }
+
+  /* Climax da pagina. "Quando nao nos contratar" e o diferencial editorial e era a
+     secao mais escondida. Gasta o bloco de superficie que o orcamento de 10 % de
+     acento liberou — UM bloco: nenhuma outra secao recebe este tratamento.
+     A secao recebe acento e nao superficie justamente porque contem .honest. */
+  .band-climax .honest {
+    background: var(--accent-100);
+    border-color: var(--accent-200);
+    border-left: 3px solid var(--accent-500);
+  }
+
+  /* Secao ativa na nav. A regua e o sinal primario e a cor reforca — cor sozinha nao
+     serve para quem nao a distingue. A informacao mesma vai em aria-current. */
+  .nav-links a.lbl.is-active,
+  .nav-sm a.lbl.is-active {
+    color: var(--fg);
+    border-bottom: 1px solid var(--accent-500);
+    padding-bottom: 0.15rem;
+  }
   .band-in { display: flex; flex-direction: column; gap: clamp(2rem, 4vw, 3rem); }
   .band-head { display: flex; flex-direction: column; gap: 0.875rem; max-width: 60ch; }
 
@@ -656,7 +768,7 @@
     .js .reveal-rules .step:last-child { border-bottom-color: var(--rule); }
     .js .reveal-rules .step::before,
     .js .reveal-rules .step::after { display: none; }
-    .btn, .svc, .theme, .nav-links a.lbl { transition: none; }
+    .btn, .svc, .theme, .nav-links a.lbl, .link-arrow, .link-arrow .arrow { transition: none; }
   }
 
   /* ---------- impressao ----------
@@ -730,7 +842,7 @@
           <div class="hero-act rise rise-4">
             <div class="hero-cta" id="hero-cta">
               <a class="btn btn-lg" href="mailto:contato@fontislabs.com.br?subject=Diagn%C3%B3stico%20t%C3%A9cnico">Agendar diagnóstico</a>
-              <a class="btn btn-lg btn-ghost" href="#como">Como trabalhamos</a>
+              <a class="link-arrow" href="#como">Como trabalhamos <span class="arrow" aria-hidden="true">→</span></a>
             </div>
             <p class="hero-spec">
               <span>30 minutos</span>
@@ -801,7 +913,7 @@
   </section>
 
   <!-- COMO -->
-  <section class="band" id="como">
+  <section class="band band-alt" id="como">
     <div class="wrap band-in">
       <div class="band-head reveal">
         <span class="lbl band-idx"><span class="n">02</span> Como trabalhamos</span>
@@ -948,7 +1060,7 @@
   </section>
 
   <!-- QUANDO NÃO -->
-  <section class="band" id="risco">
+  <section class="band band-climax" id="risco">
     <div class="wrap band-in">
       <div class="honest reveal">
         <div class="band-head">
@@ -979,7 +1091,7 @@
   </section>
 
   <!-- CTA -->
-  <section class="band" id="contato">
+  <section class="band band-alt" id="contato">
     <div class="wrap band-in">
       <div class="cta reveal">
         <div class="cta-copy">
@@ -1022,7 +1134,10 @@
       <span class="lbl">Da fonte à decisão</span>
     </div>
     <div class="foot-meta">
-      <span class="lbl">Fontis Labs · CNPJ [a definir]</span>
+      <!-- CNPJ entra aqui quando a empresa estiver aberta. Nao e obrigatorio para site
+           institucional (o Decreto 7.962/2013 obriga para comercio eletronico), mas em
+           venda B2B e sinal de empresa real. Placeholder e pior que ausencia. -->
+      <span class="lbl">Fontis Labs</span>
       <a class="lbl" href="mailto:contato@fontislabs.com.br">contato@fontislabs.com.br</a>
       <span class="lbl">fontislabs.com.br</span>
     </div>
@@ -1086,6 +1201,42 @@
         });
       }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
       for (var j = 0; j < alvos.length; j++) io.observe(alvos[j]);
+    }
+
+    /* ---- secao ativa na nav ----
+       IntersectionObserver e nao listener de scroll: o listener dispara dezenas de
+       vezes por segundo e cada disparo le layout, o que forca reflow. */
+    var linksNav = document.querySelectorAll('.nav-links a.lbl[href^="#"], .nav-sm a.lbl[href^="#"]');
+    if (temIO && linksNav.length) {
+      var porId = {};
+      for (var k = 0; k < linksNav.length; k++) {
+        var alvoId = linksNav[k].getAttribute('href').slice(1);
+        (porId[alvoId] = porId[alvoId] || []).push(linksNav[k]);
+      }
+
+      var marcar = function (idAtivo) {
+        for (var chave in porId) {
+          var ativo = chave === idAtivo;
+          for (var n = 0; n < porId[chave].length; n++) {
+            porId[chave][n].classList.toggle('is-active', ativo);
+            if (ativo) porId[chave][n].setAttribute('aria-current', 'true');
+            else porId[chave][n].removeAttribute('aria-current');
+          }
+        }
+      };
+
+      /* A secao ativa e a que ocupa a faixa central da tela. Sem essa faixa estreita,
+         duas secoes visiveis ao mesmo tempo ficam alternando a marcacao. */
+      var ioSecao = new IntersectionObserver(function (entradas) {
+        for (var e = 0; e < entradas.length; e++) {
+          if (entradas[e].isIntersecting) { marcar(entradas[e].target.id); return; }
+        }
+      }, { rootMargin: '-45% 0px -45% 0px' });
+
+      for (var chaveSecao in porId) {
+        var secao = document.getElementById(chaveSecao);
+        if (secao) ioSecao.observe(secao);
+      }
     }
 
     /* ---- CTA da nav: so vira botao cheio quando o do hero sai de cena,

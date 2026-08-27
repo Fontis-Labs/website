@@ -1,13 +1,30 @@
 // Verifica que todo caminho local citado no site existe de fato no diretorio publicado.
 // Um <link> quebrado nao derruba a pagina: ele degrada em silencio (fonte errada,
 // favicon sumido) e ninguem percebe ate um cliente abrir o site.
-import { readFile, access } from 'node:fs/promises';
+import { readFile, access, stat } from 'node:fs/promises';
 import { join, dirname, resolve, relative, isAbsolute } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const publicDir = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'public');
 const entryFiles = ['index.html', 'site.webmanifest'];
-const canonicalHost = 'https://fontislabs.com.br';
+// Origem canonica do site. Unico lugar que sabe o endereco — trocar aqui e nos <meta>
+// do HTML quando o dominio proprio entrar. Ver docs/plans/, Tarefa 10.
+const SITE_ORIGIN = 'https://fontis-labs.github.io/website';
+
+// Meta que o WhatsApp, o LinkedIn e o Slack leem para montar o card do link.
+// O site.webmanifest nao participa disso: ele serve para instalar o site como app.
+const REQUIRED_META = [
+  'og:type', 'og:locale', 'og:site_name', 'og:title', 'og:description',
+  'og:url', 'og:image', 'og:image:width', 'og:image:height',
+  'og:image:type', 'og:image:alt', 'twitter:card',
+];
+
+// Conteudo que nunca deve chegar em producao. Cada entrada e [regex, motivo].
+const FORBIDDEN_CONTENT = [
+  [/\[a definir\]/gi, 'placeholder de conteudo'],
+  [/\bTODO\b|\bFIXME\b/g, 'marcacao de trabalho pendente'],
+  [/lorem ipsum/gi, 'texto de preenchimento'],
+];
 
 const problems = [];
 
@@ -68,9 +85,90 @@ for (const entry of entryFiles) {
     }
   }
 
-  // O dominio canonico tem que ser um so, senao o buscador divide o ranking.
-  for (const url of source.match(/https:\/\/[^"'\s]*fontislabs[^"'\s]*/g) ?? []) {
-    if (!url.startsWith(canonicalHost)) problems.push(`${entry}: dominio fora do canonico -> ${url}`);
+  for (const [pattern, reason] of FORBIDDEN_CONTENT) {
+    for (const hit of source.match(pattern) ?? []) {
+      problems.push(`${entry}: ${reason} -> ${hit}`);
+    }
+  }
+
+  // Origem divergente divide o ranking do buscador e quebra o card do link.
+  for (const url of source.match(/https:\/\/[a-z0-9.-]+[^"'\s]*/gi) ?? []) {
+    const isOwnSite = url.includes('fontislabs') || url.includes('fontis-labs.github.io');
+    if (isOwnSite && !url.startsWith(SITE_ORIGIN)) {
+      problems.push(`${entry}: origem fora da canonica -> ${url}`);
+    }
+  }
+
+  if (entry === 'index.html') {
+    for (const name of REQUIRED_META) {
+      const attr = name.startsWith('og:') ? 'property' : 'name';
+      if (!new RegExp(`<meta ${attr}="${name}"`).test(source)) {
+        problems.push(`${entry}: falta <meta ${attr}="${name}">`);
+      }
+    }
+    if (/<meta name="twitter:card" content="summary">/.test(source)) {
+      problems.push(`${entry}: twitter:card=summary da miniatura pequena; use summary_large_image`);
+    }
+
+    // Uma acao primaria por tela. O hero tinha dois botoes de peso igual competindo.
+    const hero = source.match(/<section class="hero">[\s\S]*?\n  <\/section>/)?.[0] ?? '';
+    if (!hero) {
+      problems.push(`${entry}: nao achei a secao .hero — o seletor da assercao ficou obsoleto`);
+    } else {
+      const bigButtons = (hero.match(/class="btn btn-lg/g) ?? []).length;
+      if (bigButtons > 1) {
+        problems.push(`${entry}: hero tem ${bigButtons} botoes btn-lg; a regra e uma acao primaria por tela`);
+      }
+    }
+
+    // Marcar a secao ativa so com cor exclui quem nao distingue cor e quem usa leitor
+    // de tela. aria-current e o que carrega a informacao de verdade.
+    if (source.includes('is-active') && !source.includes('aria-current')) {
+      problems.push(`${entry}: secao ativa marcada sem aria-current`);
+    }
+
+    // og:image e URL absoluta, entao a checagem de caminho local nao a alcanca. Sem
+    // esta assercao, apagar o PNG passaria no CI e quebraria o card em silencio.
+    const ogImage = source.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
+    if (ogImage?.startsWith(SITE_ORIGIN)) {
+      const localPath = ogImage.slice(SITE_ORIGIN.length).replace(/^\//, '');
+      try {
+        const { size } = await stat(join(publicDir, localPath));
+        // Acima de ~300 KB o WhatsApp costuma desistir do card grande.
+        if (size > 300 * 1024) {
+          problems.push(`${entry}: og:image tem ${Math.round(size / 1024)} KB; mantenha abaixo de 300 KB`);
+        }
+      } catch {
+        problems.push(`${entry}: og:image aponta para arquivo inexistente -> ${localPath}`);
+      }
+    }
+  }
+}
+
+// Token usado e nao definido rende cor invisivel, nao erro. E token definido em um
+// tema e esquecido no outro rende texto ilegivel so para quem usa o tema escuro.
+{
+  const source = await readFile(join(publicDir, 'index.html'), 'utf8');
+  const used = new Set([...source.matchAll(/var\((--[a-z0-9-]+)/g)].map((m) => m[1]));
+  const themeBlocks = [
+    ['claro', /:root \{([\s\S]*?)\n  \}/],
+    ['escuro (prefers)', /:root:not\(\[data-theme="light"\]\) \{([\s\S]*?)\n    \}/],
+    ['escuro (toggle)', /:root\[data-theme="dark"\] \{([\s\S]*?)\n  \}/],
+  ].map(([name, re]) => [
+    name,
+    new Set([...(source.match(re)?.[1] ?? '').matchAll(/(--[a-z0-9-]+):/g)].map((m) => m[1])),
+  ]);
+
+  const COLOR_TOKEN = /^--(accent|bg|surface|fg|muted|rule|success|warning|danger|info)/;
+
+  for (const token of used) {
+    if (!themeBlocks.some(([, defined]) => defined.has(token))) {
+      problems.push(`index.html: var(${token}) usado e nunca definido`);
+    }
+    if (!COLOR_TOKEN.test(token)) continue;
+    for (const [name, defined] of themeBlocks) {
+      if (!defined.has(token)) problems.push(`index.html: ${token} nao existe no tema ${name}`);
+    }
   }
 }
 
